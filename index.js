@@ -62,7 +62,7 @@ const sendEmailTool = tool({
         from: process.env.EMAIL_FROM,
         to: process.env.EMAIL_TO,
         subject: escapeHtml(subject),
-        html: `<div style="font-family: Arial, sans-serif; padding: 20px;">${escapeHtml(body)}</div>`,
+        html: `<div style="font-family: Arial, sans-serif; padding: 20px;">${body}</div>`,
       });
       return `Email sent successfully with ID: ${email.id}`;
     } catch (error) {
@@ -77,12 +77,7 @@ const assistantAgent = new Agent({
   instructions: `
     Get the weather for cities and ALWAYS email the results to the user
     using the send_email tool. Never just summarize the results in text.
-    Format the email body as HTML with each city in a separate div:
-    <div class="weather-item">
-      <div class="city">City Name</div>
-      <div class="temp">Weather details</div>
-    </div>
-
+    Format the email body as HTML with each city in a separate div in case of multiple cities 
     Make it visually appealing and easy to read.
   `,
   tools: [weatherTool, sendEmailTool],
