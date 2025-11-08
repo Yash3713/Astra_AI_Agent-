@@ -4,8 +4,14 @@ import { z } from "zod";
 import axios from "axios";
 import { Resend } from "resend";
 
-if (!process.env.RESEND_API_KEY || !process.env.EMAIL_FROM || !process.env.EMAIL_TO) {
-  throw new Error("Missing required environment variables: RESEND_API_KEY, EMAIL_FROM, EMAIL_TO");
+if (
+  !process.env.RESEND_API_KEY ||
+  !process.env.EMAIL_FROM ||
+  !process.env.EMAIL_TO
+) {
+  throw new Error(
+    "Missing required environment variables: RESEND_API_KEY, EMAIL_FROM, EMAIL_TO"
+  );
 }
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -19,7 +25,10 @@ const weatherTool = tool({
   execute: async ({ city }) => {
     try {
       const url = `https://wttr.in/${city.toLowerCase()}?format=%C+%t`;
-      const response = await axios.get(url, { responseType: "text", timeout: 5000 });
+      const response = await axios.get(url, {
+        responseType: "text",
+        timeout: 5000,
+      });
       return `The current weather in ${city} is ${response.data}`;
     } catch (error) {
       console.error(`Failed to fetch weather for ${city}:`, error.message);
@@ -40,11 +49,11 @@ const sendEmailTool = tool({
       // Escape HTML to prevent XSS
       const escapeHtml = (text) => {
         const map = {
-          '&': '&amp;',
-          '<': '&lt;',
-          '>': '&gt;',
-          '"': '&quot;',
-          "'": '&#039;'
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#039;",
         };
         return text.replace(/[&<>"']/g, (m) => map[m]);
       };
@@ -57,7 +66,7 @@ const sendEmailTool = tool({
       });
       return `Email sent successfully with ID: ${email.id}`;
     } catch (error) {
-      console.error('Failed to send email:', error.message);
+      console.error("Failed to send email:", error.message);
       return `Failed to send email: ${error.message}`;
     }
   },
@@ -92,7 +101,8 @@ async function main(query) {
 }
 
 // Get query from command line arguments or use default
-const defaultQuery = "Get the weather in Chennai, and send me an email with the results.";
+const defaultQuery =
+  "Get the weather in Chennai, and send me an email with the results.";
 const query = process.argv.slice(2).join(" ") || defaultQuery;
 
 main(query);

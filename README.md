@@ -20,12 +20,14 @@ An intelligent weather agent powered by OpenAI that fetches weather information 
 ## Installation
 
 1. Clone the repository:
+
 ```bash
 git clone <your-repo-url>
 cd Astra_AI_Agent-
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 # or
@@ -33,11 +35,13 @@ pnpm install
 ```
 
 3. Set up environment variables:
+
 ```bash
 cp .env.example .env
 ```
 
 4. Edit `.env` and add your API keys:
+
 ```env
 RESEND_API_KEY=your_actual_resend_api_key
 EMAIL_FROM=noreply@yourdomain.com
@@ -50,6 +54,7 @@ OPENAI_API_KEY=your_actual_openai_api_key
 ### Default Query
 
 Run the agent with the default query (Chennai weather):
+
 ```bash
 npm run dev
 ```
@@ -57,6 +62,7 @@ npm run dev
 ### Custom Query
 
 Pass a custom query via command-line arguments:
+
 ```bash
 node index.js "Get the weather in Tokyo, Paris, and New York, then email me the results."
 ```
@@ -109,14 +115,17 @@ Astra_AI_Agent-/
 ## Troubleshooting
 
 ### "Missing required environment variables" error
+
 Make sure all variables in `.env` are set correctly.
 
 ### Email not sending
+
 - Verify your Resend API key is valid
 - Check that `EMAIL_FROM` domain is verified in Resend
 - Ensure `EMAIL_TO` is a valid email address
 
 ### Weather data not fetching
+
 - Check your internet connection
 - The wttr.in service might be temporarily unavailable
 - Try with a different city name
