@@ -4,7 +4,11 @@ import { z } from "zod";
 import axios from "axios";
 import { Resend } from "resend";
 
-if (!process.env.RESEND_API_KEY || !process.env.EMAIL_FROM) {
+if (
+  !process.env.RESEND_API_KEY ||
+  !process.env.EMAIL_FROM ||
+  !process.env.EMAIL_TO
+) {
   throw new Error("Missing environment variables for Resend.");
 }
 
@@ -17,9 +21,13 @@ const weatherTool = tool({
     city: z.string().describe("The city to get the weather for"),
   }),
   execute: async ({ city }) => {
-    const url = `https://wttr.in/${city.toLowerCase()}?format=%C+%t`;
-    const response = await axios.get(url, { responseType: "text" });
-    return `The current weather in ${city} is ${response.data}`;
+    try {
+      const url = `https://wttr.in/${city.toLowerCase()}?format=%C+%t`;
+      const response = await axios.get(url, { responseType: "text" });
+      return `The current weather in ${city} is ${response.data}`;
+    } catch (error) {
+      return `Failed to get weather for ${city}. Please ensure the city name is correct.`;
+    }
   },
 });
 
@@ -46,12 +54,7 @@ const assistantAgent = new Agent({
   instructions: `
     Get the weather for  cities and ALWAYS email the results to the user 
     using the send_email tool. Never just summarize the results in text.
-    Format the email body as HTML with each city in a separate div:
-    <div class="weather-item">
-      <div class="city">City Name</div>
-      <div class="temp">Weather details</div>
-    </div>
-    
+    Format the email body as HTML with each city in a separate div if multiple cities are there in query request.
     Make it visually appealing and easy to read.
   `,
   tools: [weatherTool, sendEmailTool],
